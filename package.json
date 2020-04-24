@@ -51,8 +51,13 @@
               "config": "./webpack.renderer.config.js",
               "entryPoints": [
                 {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
+                  "html": "./src/renderer/background/index.html",
+                  "js": "./src/renderer/background/background.tsx",
+                  "name": "background_window"
+                },
+                {
+                  "html": "./src/renderer/main/index.html",
+                  "js": "./src/renderer/main/main.tsx",
                   "name": "main_window"
                 }
               ]
@@ -70,8 +75,14 @@
     "@electron-forge/maker-zip": "6.0.0-beta.50",
     "@electron-forge/plugin-webpack": "6.0.0-beta.50",
     "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
+    "@types/memoizee": "^0.4.3",
+    "@types/mv": "^2.1.0",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/tar-fs": "^1.16.3",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
+    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.0.0",
     "electron": "8.2.3",
     "eslint": "^6.8.0",
@@ -83,6 +94,18 @@
     "typescript": "^3.7.0"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "@types/auto-launch": "^5.0.1",
+    "@types/lodash": "^4.14.150",
+    "auto-launch": "^5.0.5",
+    "chokidar": "^3.3.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "fix-path": "^3.0.0",
+    "lodash": "^4.17.15",
+    "memoizee": "^0.4.14",
+    "mv": "^2.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rmdir": "^1.2.0",
+    "tar-fs": "^2.0.1"
   }
 }

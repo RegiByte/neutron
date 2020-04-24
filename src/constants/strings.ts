@@ -1,0 +1,9 @@
+export const APP_NAME = 'Neutron';
+export const TOGGLE_APP = `Toggle ${APP_NAME}`;
+export const APP_PLUGINS = 'Plugins';
+export const APP_PREFERENCES = 'Preferences';
+export const CHECK_UPDATEDS = 'Check for updates';
+export const DEV_TOOLS_MAIN = 'Dev Tools (main)';
+export const DEV_TOOLS_BACKGROUND = 'Dev Tools (background)';
+export const RELOAD = 'Reload';
+export const EXIT_APP = `Exit ${APP_NAME}`;
