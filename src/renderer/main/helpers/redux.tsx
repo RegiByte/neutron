@@ -11,12 +11,6 @@ export interface Handlers<T> {
   [key: string]: T;
 }
 
-interface State {
-  foo: string;
-  bar: string;
-}
-
-
 export function reducerFactory<S, A, P>(handlers: Handlers<Handler<S, Action<S, A, P>>>, initialState: S = {} as S): (state: S, action: Action<S, A, P>) => S {
   return function reducer(state = initialState, action): S {
     const handler = get(handlers, action.type) as Handler<S, Action<S, A, P>>;
