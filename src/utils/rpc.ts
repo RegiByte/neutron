@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import ipcRenderer = Electron.ipcRenderer;
+import {ipcRenderer} from 'electron'
 
 const emitter = new EventEmitter.EventEmitter();
 

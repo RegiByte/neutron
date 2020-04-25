@@ -1,8 +1,8 @@
 import { ensureFiles, modulesDirectory, } from "../utils/plugins";
-import chokidar from 'chokidar';
+import chokidar from "chokidar";
 import * as path from "path";
 import settings from "../utils/pluginSettings";
-import { debounce, get, } from 'lodash';
+import { debounce, get, } from "lodash";
 import { initializePlugin, } from "../utils/initializePlugin";
 
 function requirePlugin(pluginPath: string): object {
@@ -29,9 +29,9 @@ function isPluginValid(plugin: any): boolean {
 
 ensureFiles();
 
-const plugins = new Map<string, any>();
-
 const pluginsWatcher = chokidar.watch(modulesDirectory, { depth: 0, });
+
+const plugins = new Map();
 
 pluginsWatcher.on('unlinkDir', (pluginPath) => {
   const { base, dir, } = path.parse(pluginPath);
@@ -46,6 +46,7 @@ pluginsWatcher.on('unlinkDir', (pluginPath) => {
 
   console.log(`[${base}] Plugin removed`);
 });
+
 
 pluginsWatcher.on('addDir', (pluginPath) => {
   const { base, dir, } = path.parse(pluginPath);
@@ -92,9 +93,5 @@ pluginsWatcher.on('addDir', (pluginPath) => {
     console.groupEnd();
   }, 1500);
 });
-
-const pE = new Map();
-
-export { pE, };
 
 export default plugins;

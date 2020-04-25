@@ -1,4 +1,11 @@
-import { app, BrowserWindow, BrowserWindowConstructorOptions, globalShortcut, screen, shell, } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  globalShortcut,
+  screen,
+  shell,
+} from 'electron';
 import { getWindowPosition, toggleWindow, } from "./window";
 import { INPUT_HEIGHT, WINDOW_WIDTH, } from "../constants/ui";
 import config from "./config";
@@ -34,6 +41,9 @@ export function createMainWindow({ isDev, src, }: CreateWindowParams): MainWindo
     frame: false,
     resizable: false,
     show: config.get<boolean>('firstStart'),
+    webPreferences: {
+      nodeIntegration: true,
+    },
   } as BrowserWindowConstructorOptions;
 
   if (process.platform === 'linux') {

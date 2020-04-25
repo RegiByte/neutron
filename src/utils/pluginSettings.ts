@@ -1,7 +1,8 @@
-import { get, set, } from 'lodash';
-import { every, } from 'lodash/fp';
-import plugins from '../plugins';
+import {get, set,} from 'lodash';
+import {every,} from 'lodash/fp';
 import config from "./config";
+import core from "../plugins/core";
+import installedPlugins from "../plugins/installedPlugins";
 
 const getSettings = (pluginName: string): object => config.get<object>(`plugins.${pluginName}`);
 
@@ -39,10 +40,10 @@ export function validateSetting({ settings }: ValidateSettingParams): boolean {
 export function getUserSettings(pluginName: string): object {
   const settings = getSettings(pluginName);
 
-  if (get(plugins, `${pluginName}.settings`, null)) {
-    Object.keys(get(plugins, `${pluginName}.settings`, {}))
+  if (get(new Map([...core, ...installedPlugins,]), `${pluginName}.settings`, null)) {
+    Object.keys(get(new Map([...core, ...installedPlugins,]), `${pluginName}.settings`, {}))
       .forEach(key => {
-        set(settings, key, get(settings, key, get(plugins, `${pluginName}.settings.${key}.defaultValue`)));
+        set(settings, key, get(settings, key, get(new Map([...core, ...installedPlugins,]), `${pluginName}.settings.${key}.defaultValue`)));
       });
   }
 

@@ -1,9 +1,10 @@
-import plugins from "../plugins/externalPlugins";
-import { getUserSettings, } from "./pluginSettings";
+import {getUserSettings,} from "./pluginSettings";
 import rpc from "./rpc";
+import core from "../plugins/core";
+import installedPlugins from "../plugins/installedPlugins";
 
 export function initializePlugin(name: string): void {
-  const { initialize, initializeAsync, } = plugins.get(name) || {};
+  const { initialize, initializeAsync, } = new Map([...core, ...installedPlugins,]).get(name) || {};
 
   if (initialize) {
     try {
@@ -20,9 +21,9 @@ export function initializePlugin(name: string): void {
 
 export default function listenPluginMessages() {
   rpc.on('plugin.message', ({ name, data, }: { name: string; data: any }) => {
-    const plugin = plugins.get(name) || {};
+    const plugin = new Map([...core, ...installedPlugins,]).get(name) || {};
     if (plugin.onMessage) plugin.onMessage(data);
   });
 
-  plugins.forEach(([ _value, key, ]) => initializePlugin(key));
+  new Map([...core, ...installedPlugins,]).forEach(([ _value, key, ]) => initializePlugin(key));
 }
