@@ -1,6 +1,6 @@
-import { Action, Handler, Handlers, reducerFactory, } from "../helpers/redux";
-import { MIN_VISIBLE_RESULTS, } from "../../../constants/ui";
-import { orderBy, uniq, } from 'lodash';
+import {Action, Handler, Handlers, reducerFactory,} from "../helpers/redux";
+import {MIN_VISIBLE_RESULTS,} from "../../../constants/ui";
+import {orderBy, uniq,} from 'lodash';
 
 function normalizeSelection(index: number, length: number): number {
   const normalizedIndex = index % length;
@@ -9,12 +9,19 @@ function normalizeSelection(index: number, length: number): number {
 
 const noon = (): void => null;
 
-interface Result {
-  onFocus: () => any;
-  onBlur: () => any;
-  onSelect: () => any;
+export interface Result {
   id: string;
-  order: number;
+  term?: string;
+  clipboard?: string;
+  icon?: string;
+  title: string;
+  subtitle?: string;
+  getPreview?: () => React.Component | React.FunctionComponent | string;
+  onSelect?: (event: Event) => void;
+  onKeyDown?: (event: Event) => void;
+  onFocus?: (event: Event) => void;
+  onBlur?: (event: Event) => void;
+  order?: number;
 }
 
 function normalizeResult(result: Result): Result {
@@ -64,13 +71,13 @@ type ShowResultPayload = {
   term: string;
   result: Result[];
 }
-type ChangeVisibleResultsPayload = number
+type ChangeVisibleResultsPayload = (state: SearchBarInitialState) => SearchBarInitialState
 
-interface ResultsById {
+export interface ResultsById {
   [key: string]: Result;
 }
 
-interface InitialState {
+export interface SearchBarInitialState {
   term: string;
   prevTerm: string;
   resultIds: string[];
@@ -80,7 +87,7 @@ interface InitialState {
 }
 
 
-export const initialState: InitialState = {
+export const initialState: SearchBarInitialState = {
   prevTerm: '',
   term: '',
   resultIds: [],
@@ -98,12 +105,12 @@ type Payload =
   | ShowResultPayload
   | ChangeVisibleResultsPayload
 
-const handlers: Handlers<Handler<InitialState,
-  Action<InitialState,
+const handlers: Handlers<Handler<SearchBarInitialState,
+  Action<SearchBarInitialState,
     Actions,
     Payload>>> = {};
 
-handlers[actions.UPDATE_TERM] = (state, { payload, }: Action<InitialState, Actions, UpdateTermPayload>): InitialState => {
+handlers[actions.UPDATE_TERM] = (state, { payload, }: Action<SearchBarInitialState, Actions, UpdateTermPayload>): SearchBarInitialState => {
   return {
     ...state,
     term: payload,
@@ -112,7 +119,7 @@ handlers[actions.UPDATE_TERM] = (state, { payload, }: Action<InitialState, Actio
   };
 };
 
-handlers[actions.MOVE_CURSOR] = (state, action: Action<InitialState, Actions, MoveCursorPayload>): InitialState => {
+handlers[actions.MOVE_CURSOR] = (state, action: Action<SearchBarInitialState, Actions, MoveCursorPayload>): SearchBarInitialState => {
   const { payload, } = action;
   return ({
     ...state,
@@ -120,12 +127,12 @@ handlers[actions.MOVE_CURSOR] = (state, action: Action<InitialState, Actions, Mo
   });
 };
 
-handlers[actions.SELECT_ELEMENT] = (state, action: Action<InitialState, Actions, SelectElementPayload>): InitialState => ({
+handlers[actions.SELECT_ELEMENT] = (state, action: Action<SearchBarInitialState, Actions, SelectElementPayload>): SearchBarInitialState => ({
   ...state,
   selected: normalizeSelection(action.payload, state.resultIds.length),
 });
 
-handlers[actions.UPDATE_RESULT] = (state, action: Action<InitialState, Actions, UpdateResultPayload>): InitialState => {
+handlers[actions.UPDATE_RESULT] = (state, action: Action<SearchBarInitialState, Actions, UpdateResultPayload>): SearchBarInitialState => {
   const { payload, } = action;
   const { resultsById, } = state;
   const { id, result, } = payload;
@@ -142,7 +149,7 @@ handlers[actions.UPDATE_RESULT] = (state, action: Action<InitialState, Actions, 
   });
 };
 
-handlers[actions.HIDE_RESULT] = (state, action: Action<InitialState, Actions, HideResultPayload>): InitialState => {
+handlers[actions.HIDE_RESULT] = (state, action: Action<SearchBarInitialState, Actions, HideResultPayload>): SearchBarInitialState => {
   const { id, } = action.payload;
   const { resultsById: originalResultsById, resultIds: originalResultIds, } = state;
   const resultIds = originalResultIds.filter((resultId: string) => resultId !== id);
@@ -160,7 +167,7 @@ handlers[actions.HIDE_RESULT] = (state, action: Action<InitialState, Actions, Hi
   };
 };
 
-handlers[actions.SHOW_RESULT] = (state, action: Action<InitialState, Actions, ShowResultPayload>): InitialState => {
+handlers[actions.SHOW_RESULT] = (state, action: Action<SearchBarInitialState, Actions, ShowResultPayload>): SearchBarInitialState => {
   const { term, result, } = action.payload;
 
   if (term !== state.term) {
@@ -187,16 +194,13 @@ handlers[actions.SHOW_RESULT] = (state, action: Action<InitialState, Actions, Sh
   };
 };
 
-handlers[actions.CHANGE_VISIBLE_RESULTS] = (state, action: Action<InitialState, Actions, ChangeVisibleResultsPayload>): InitialState => {
+handlers[actions.CHANGE_VISIBLE_RESULTS] = (state, action: Action<SearchBarInitialState, Actions, ChangeVisibleResultsPayload>): SearchBarInitialState => {
   const { payload, } = action;
 
-  return {
-    ...state,
-    visibleResults: payload,
-  };
+  return payload(state);
 };
 
-handlers[actions.RESET] = (state): InitialState => {
+handlers[actions.RESET] = (state): SearchBarInitialState => {
   return {
     ...initialState,
     prevTerm: state.term || state.prevTerm,
@@ -204,4 +208,4 @@ handlers[actions.RESET] = (state): InitialState => {
 };
 
 
-export default reducerFactory<InitialState, Actions, Payload>(handlers, initialState);
+export default reducerFactory<SearchBarInitialState, Actions, Payload>(handlers, initialState);

@@ -44,3 +44,13 @@ export const Autocomplete = styled.div`
   line-height: 46px;
   white-space: pre;
 `;
+
+export const StatusBar = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+  border-radius: 5px 0 0 0;
+  border-width: 1px 0 0 1px;
+  font-size: .75em;
+`;

@@ -57,8 +57,6 @@ const createWindow = (): void => {
   mainWindow.webContents.openDevTools({
     mode: 'detach',
   });
-
-  console.log(mainWindow.isVisible());
 };
 
 // This method will be called when Electron has finished

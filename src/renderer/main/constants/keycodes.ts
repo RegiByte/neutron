@@ -1,0 +1,14 @@
+export const SPACE_KEY = 27;
+export const C_KEY = 67;
+export const ONE_KEY = 49;
+export const NINE_KEY = 57;
+export const J_KEY = 74;
+export const K_KEY = 75;
+export const L_KEY = 76;
+export const O_KEY = 79;
+export const TAB_KEY = 9;
+export const ARROW_RIGHT_KEY = 39;
+export const ARROW_DOWN_KEY = 40;
+export const ARROW_UP_KEY = 38;
+export const ENTER_KEY = 13;
+export const ESC_KEY = 27;

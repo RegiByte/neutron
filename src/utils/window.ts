@@ -1,6 +1,8 @@
-import { BrowserWindow, Display, Rectangle, screen, } from 'electron';
+import { BrowserWindow, Display, Rectangle, remote, screen, } from 'electron';
 import { INPUT_HEIGHT, MIN_VISIBLE_RESULTS, RESULT_HEIGHT, WINDOW_WIDTH, } from "../constants/ui";
 import config from "./config";
+
+const appScreen = remote ? remote.screen : screen;
 
 interface WindowPositionParams {
   width?: number;
@@ -18,7 +20,7 @@ export function getWindowPosition({ width, heightWithResults, }: WindowPositionP
   const winWidth = width || WINDOW_WIDTH;
   const winHeight = heightWithResults || MIN_VISIBLE_RESULTS * RESULT_HEIGHT + INPUT_HEIGHT;
 
-  const display = screen.getPrimaryDisplay();
+  const display = appScreen.getPrimaryDisplay();
   const positions: number[] = config.get<number[]>(`positions.${display.id}`);
 
   if (positions && positions.length) {
@@ -30,7 +32,7 @@ export function getWindowPosition({ width, heightWithResults, }: WindowPositionP
       return [ x, y, ];
     }
 
-    const displays = screen.getAllDisplays();
+    const displays = appScreen.getAllDisplays();
     const isVisibleSomewhere = displays.some(isWindowVisible);
 
     if (isVisibleSomewhere) {
